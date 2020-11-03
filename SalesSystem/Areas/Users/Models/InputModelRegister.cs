@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace SalesSystem.Areas.Users.Models
 
         [Required(ErrorMessage = "El campo telefono es obligatorio.")]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"(([+]?34) ?)?(6(([0-9]{8})|([0-9]{2} [0-9]{6})|([0-9]{2} [0-9]{3} [0-9]{3}))|9(([0-9]{8})|([0-9]{2} [0-9]{6})|([1-9] [0-9]{7})|([0-9]{2} [0-9]{3} [0-9]{3})|([0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2})))", ErrorMessage = "<font color='red>El formato de telefono ingresado no es válido")]
+        [RegularExpression(@"(([+]?34) ?)?(6(([0-9]{8})|([0-9]{2} [0-9]{6})|([0-9]{2} [0-9]{3} [0-9]{3}))|9(([0-9]{8})|([0-9]{2} [0-9]{6})|([1-9] [0-9]{7})|([0-9]{2} [0-9]{3} [0-9]{3})|([0-9]{2} [0-9]{2} [0-9]{2} [0-9]{2})))", ErrorMessage = " El formato de telefono ingresado no es válido")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "El campo correo electronico es obligatorio.")]
@@ -30,5 +31,14 @@ namespace SalesSystem.Areas.Users.Models
         [Required(ErrorMessage = "El campo contraseña es obligatorio.")]
         [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
         public string Password { get; set; }
+
+        
+        [Required(ErrorMessage = "Seleccione un role")]
+        public string Role { get; set; }
+
+        public string ID { get; set; }
+        public int Id { get; set; }
+        public byte[] Image { get; set; }
+        public IdentityUser IdentityUser { get; set; }
     }
 }
