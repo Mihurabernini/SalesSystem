@@ -11,7 +11,7 @@ namespace SalesSystem.Library
     public class LPaginador<T>
     {
         //cantidad de resutados por página
-        private int pagi_cuantos = 8;
+        private int pagi_cuantos = 10;
         //cantidad de enlaces que se mostrarán como minimo en la barra de navegacíon
         private int pagi_nav_num_enlaces = 3;
         private int pagi_actual;
@@ -28,7 +28,10 @@ namespace SalesSystem.Library
         public object[] paginador(List<T> table, int pagina, int registros, String area, String controller, String action, String host)
         {
             pagi_actual = pagina == 0 ? 1 : pagina;
-            pagi_cuantos = registros > 0 ? registros : pagi_cuantos;
+            if (registros > 0)
+            {
+                pagi_cuantos = registros;
+            }
 
             int pagi_totalReg = table.Count;
             double valor1 = Math.Ceiling((double)pagi_totalReg / (double)pagi_cuantos);
@@ -121,6 +124,23 @@ namespace SalesSystem.Library
             // Consulta SQL. Deveuleve cantidad registros empezando desde pagi_inicial
 
             var query = table.Skip(pagi_inicial).Take(pagi_cuantos).ToList();
+
+            /*
+             * Generación de la información sobre los registros mostrados.
+             * -----------------------------------------------------------
+             */
+
+            // Números del primer registro de la página actual
+            int pagi_desde = pagi_inicial + 1;
+            // Número del último registro de la página actual
+            int pagi_hasta = pagi_inicial + pagi_cuantos;
+            if (pagi_hasta > pagi_totalReg)
+            {
+                //Si estamos en la última página
+                // El último registro de la página actual será igual al número de registros.
+                pagi_hasta = pagi_totalReg;
+            }
+
             String pagi_info = " del <b>" + pagi_actual + "</b> al <b>" + pagi_totalPags + "</b> de <b>" +
                 pagi_totalReg + "</b> <b>/" + pagi_cuantos + " </b>";
 
