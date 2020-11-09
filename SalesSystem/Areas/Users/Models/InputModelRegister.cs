@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -40,5 +41,8 @@ namespace SalesSystem.Areas.Users.Models
         public int Id { get; set; }
         public byte[] Image { get; set; }
         public IdentityUser IdentityUser { get; set; }
+        
+        [TempData]
+        public string ErrorMessage { get; set; }
     }
 }
