@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SalesSystem.Areas.Principal.Controllers;
+using SalesSystem.Areas.Users.Models;
+using SalesSystem.Data;
+using SalesSystem.Library;
 using SalesSystem.Models;
 
 namespace SalesSystem.Controllers
@@ -14,18 +18,75 @@ namespace SalesSystem.Controllers
     public class HomeController : Controller
     {
         //IServiceProvider _serviceProvider;
-
-        public HomeController(IServiceProvider serviceProvider)
+        private static InputModelLogin _model;
+        private LUser _user;
+        private SignInManager<IdentityUser> _signInManager;
+        public HomeController(
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext context,
+            IServiceProvider serviceProvider)
         {
             //_serviceProvider = serviceProvider;
+            _signInManager = signInManager;
+            _user = new LUser(userManager,signInManager, roleManager,context);
         }
 
         public async Task<IActionResult> Index()
         {
+            //peticion por get por defecto
             //await CreateRolesAsync(_serviceProvider);
-            return View();
+            if (_signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction(nameof(PrincipalController.Principal), "Principal");
+            }
+            else
+            {
+                if (_model != null)
+                {
+                    return View(_model);
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            
+           
         }
-
+        [HttpPost]
+        public async Task<IActionResult> Index(InputModelLogin model)
+        {
+            _model = model;
+            //captura la información del login a traves del index.cshtml
+            if (ModelState.IsValid)
+            {
+                var result = await _user.UserLoginAsync(model);
+                if (result.Succeeded)
+                {
+                    return Redirect("/Principal/Principal");
+                }
+                else
+                {
+                    model.ErrorMessage = "Correo o contrasela inválidos.";
+                    return Redirect("/");
+                }
+                
+            }
+            else
+            {
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        _model.ErrorMessage = error.ErrorMessage;
+                    }
+                }
+                return Redirect("/");
+            }
+            
+        }
         public IActionResult Privacy()
         {
             return View();

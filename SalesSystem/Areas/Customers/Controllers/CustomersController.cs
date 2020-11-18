@@ -5,45 +5,39 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SalesSystem.Areas.Users.Models;
-using SalesSystem.Controllers;
+using SalesSystem.Areas.Customers.Models;
 using SalesSystem.Data;
 using SalesSystem.Library;
 using SalesSystem.Models;
 
-namespace SalesSystem.Areas.Users.Controllers
+namespace SalesSystem.Areas.Customers.Controllers
 {
-    [Area("Users")]
     [Authorize]
-    public class UsersController : Controller
+    [Area("Customers")]
+    public class CustomersController : Controller
     {
-        //vamos a implementar el paginador en el controlador de usuarios
-        // crearemos unos atributos
+        private LCustomers _customer;
         private SignInManager<IdentityUser> _signInManager;
-        private LUser _user;
         private static DataPaginador<InputModelRegister> models;
 
-        public UsersController(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
-            RoleManager<IdentityRole> roleManager,
-            ApplicationDbContext context
-            )
+        public CustomersController(LCustomers customer, SignInManager<IdentityUser> signInManager,
+            ApplicationDbContext context)
         {
             _signInManager = signInManager;
-            _user = new LUser(userManager, signInManager, roleManager, context);
+            _customer = new LCustomers(context);
         }
-        public IActionResult Users(int id, String filtrar, int registros)
+
+        public IActionResult Customers(int id, String filtrar)
         {
             if (_signInManager.IsSignedIn(User))
             {
-                //poner el paginador
                 Object[] objects = new Object[3];
-                var data = _user.getTUsuariosAsync(filtrar, 0);
-                if (0 < data.Result.Count)
+                var data = _customer.getTClients(filtrar, 0);
+                if (0 < data.Count)
                 {
                     var url = Request.Scheme + "://" + Request.Host.Value;
-                    objects = new LPaginador<InputModelRegister>().paginador(data.Result, id, registros, "Users", "Users", "Users", url);
+                    objects = new LPaginador<InputModelRegister>().paginador(data,
+                        id, 10, "Customers", "Customers", "Customers", url);
                 }
                 else
                 {
@@ -59,18 +53,12 @@ namespace SalesSystem.Areas.Users.Controllers
                     Input = new InputModelRegister(),
                 };
                 return View(models);
-        }
+            }
             else
             {
                 return Redirect("/");
-    }
-
-}
-//metodo de acción para cerrar sesion en la aplicacion
-public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            
         }
     }
 }
