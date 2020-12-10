@@ -30,6 +30,12 @@
                                 <p class="text-danger">No disponible.</p>
                             }
                         </div>
+                        <div class="row">
+                            <a asp-area="Customers" asp-page="Reports" 
+                               asp-route-id="@Model.Input.DataClient.IdClient" class="btn btn-info">
+                               Reportes
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -103,4 +109,3 @@
         </div>
     </div>
 </div>
-

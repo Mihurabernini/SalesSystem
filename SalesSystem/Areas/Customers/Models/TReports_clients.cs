@@ -20,7 +20,8 @@ namespace SalesSystem.Areas.Customers.Models
         public DateTime DateDebt { get; set; }
         public string Ticket { get; set; }
         public DateTime Deadline { get; set; }
-        public int IdClient { get; set; }
+        public int TClientsIdClient { get; set; }
         public TClients TClients { get; set; }
+
     }
 }

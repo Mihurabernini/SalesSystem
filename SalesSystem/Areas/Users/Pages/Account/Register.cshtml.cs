@@ -47,10 +47,11 @@ namespace SalesSystem.Areas.Users.Pages.Account
         }
         public void OnGet(int id)
         {
-            _dataUser2 = null;
+            //_dataUser2 = null;
             if (id.Equals(0))
             {
                 _dataUser2 = null;
+                _dataInput = null;
             }
             if (_dataInput != null || _dataUser1 != null || _dataUser2 != null)
             {
@@ -59,6 +60,7 @@ namespace SalesSystem.Areas.Users.Pages.Account
                     Input = _dataInput;
                     Input.rolesLista = _usersRole.getRoles(_roleManager);
                     Input.AvatarImage = null;
+                    Input.Image = _dataUser2.Image;
                 }
                 else
                 {
@@ -92,7 +94,12 @@ namespace SalesSystem.Areas.Users.Pages.Account
                 };
             }
 
-            _dataUser2 = _dataUser1;
+            if (_dataUser2 == null)
+            {
+                _dataUser2 = _dataUser1;
+            }
+
+            
             _dataUser1 = null;
         }
         [BindProperty]
@@ -114,6 +121,9 @@ namespace SalesSystem.Areas.Users.Pages.Account
                     if (User.IsInRole("Admin")) {
                         if (await SaveAsync())
                         {
+                            _dataUser2 = null;
+                            _dataUser1 = null;
+                            _dataInput = null;
                             return Redirect("/Users/Users?area=Users");
                         }
                         else
@@ -135,6 +145,8 @@ namespace SalesSystem.Areas.Users.Pages.Account
                         {
                             var url = $"/Users/Account/Details?id={_dataUser2.Id}";
                             _dataUser2 = null;
+                            _dataUser1 = null;
+                            _dataInput = null;
                             return Redirect(url);
                         }
                         else

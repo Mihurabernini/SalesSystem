@@ -1,0 +1,68 @@
+﻿@page "/Customers/Reports"
+@model ReportsModel
+@{
+    var name = $"{Model.Input.DataClient.Name} {Model.Input.DataClient.LastName}";
+    var currentDebt = $"{Model.Input.Money}{String.Format("{0:#,###,###,##0.00####}", Model.Input.DataClient.CurrentDebt)}";
+    var lastPayment = $"{Model.Input.Money}{String.Format("{0:#,###,###,##0.00####}", Model.Input.DataClient.LastPayment)}";
+    var monthly = $"{Model.Input.Money}{String.Format("{0:#,###,###,##0.00####}", Model.Input.DataClient.Monthly)}";
+}
+
+<div class="container">
+    <h1>@name</h1>
+    <div class="col-sm">
+        <div class="card text-center" style="width: 21rem,">
+            <div class="card-header">
+                <h5>Reportes de pagos</h5>
+            </div>
+            <div class="card-body">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" data-toggle="tab" href="#nav-fee" role="tab" aria-selected="true">Cuotas</a>
+                        <a class="nav-item nav-link active" data-toggle="tab" href="#nav-interests" role="tab" aria-selected="false">Intereses</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-fee" role="tabpanel">
+                        <div class="col-md-10">
+                            <div class="row">
+                                <p>Deuda: </p>
+                                &nbsp;
+                                <p>@currentDebt</p>
+                            </div>
+                            <div class="row">
+                                <p>Pago: </p>
+                                &nbsp;
+                                <p> @lastPayment </p>
+                            </div>
+                            <div class="row">
+                                <p>Cuotas por mes: </p>
+                                &nbsp;
+                                <p>@monthly</p>
+                            </div>
+                            <div class="row">
+                                <p>Fecha del pago: </p>
+                                &nbsp;
+                                <p> @Model.Input.DataClient.DatePayment.ToString("dd/MM/yyyy") </p>
+                            </div>
+                            <div class="row">
+                                <p>Ticket: </p>
+                                &nbsp;
+                                <p> @Model.Input.DataClient.Ticket </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-interests" role="tabpanel">
+
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <form asp-area="Customers" asp-page="Reports" method="post">
+                            <div
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

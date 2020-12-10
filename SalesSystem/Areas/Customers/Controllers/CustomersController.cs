@@ -20,13 +20,13 @@ namespace SalesSystem.Areas.Customers.Controllers
         private SignInManager<IdentityUser> _signInManager;
         private static DataPaginador<InputModelRegister> models;
 
-        public CustomersController(LCustomers customer, SignInManager<IdentityUser> signInManager,
-            ApplicationDbContext context)
+        public CustomersController(
+           SignInManager<IdentityUser> signInManager,
+           ApplicationDbContext context)
         {
             _signInManager = signInManager;
             _customer = new LCustomers(context);
         }
-
         public IActionResult Customers(int id, String filtrar)
         {
             if (_signInManager.IsSignedIn(User))
@@ -58,7 +58,7 @@ namespace SalesSystem.Areas.Customers.Controllers
             {
                 return Redirect("/");
             }
-            
+
         }
     }
 }

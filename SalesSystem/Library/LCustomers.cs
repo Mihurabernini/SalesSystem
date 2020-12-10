@@ -43,7 +43,8 @@ namespace SalesSystem.Library
                     {
                         IdClient = item.IdClient,
                         Nid = item.Nid,
-                        LastName = item.Name,
+                        Name = item.Name,
+                        LastName = item.LastName,
                         Email = item.Email,
                         Phone = item.Phone,
                         Credit = item.Credit,
@@ -53,6 +54,72 @@ namespace SalesSystem.Library
                 }
             }
             return clientsList;
+        }
+
+        public List<TClients> getTClient(String Nid)
+        {
+            var listTClients = new List<TClients>();
+            using (var dbContext = new ApplicationDbContext())
+            {
+                listTClients = dbContext.TClients.Where(u => u.Nid.Equals(Nid)).ToList();
+            }
+            
+            return listTClients;
+        }
+
+        public InputModelRegister getTClientReport(int id)
+        {
+            var dataClients = new InputModelRegister();
+            using (var dbContext = new ApplicationDbContext())
+            {
+                var query = dbContext.TClients.Join(dbContext.TReports_clients,
+                    c => c.IdClient, r => r.TClientsIdClient, (c, r) => new
+                    {
+                        c.IdClient,
+                        c.Nid,
+                        c.Name,
+                        c.LastName,
+                        c.Phone,
+                        c.Email,
+                        c.Direccion,
+                        c.Credit,
+                        r.IdReport,
+                        r.Debt,
+                        r.Monthly,
+                        r.Change,
+                        r.CurrentDebt,
+                        r.DatePayment,
+                        r.LastPayment,
+                        r.Ticket,
+                        r.Deadline,
+
+                    }).Where(c => c.IdClient.Equals(id)).ToList();
+                    if (!query.Count.Equals(0))
+                    {
+                    var data = query.ToList().Last();
+                    dataClients = new InputModelRegister
+                    {
+                        IdClient = data.IdClient,
+                        Nid = data.Nid,
+                        Name = data.Name,
+                        LastName = data.LastName,
+                        Phone = data.Phone,
+                        Email = data.Email,
+                        Direction = data.Direccion,
+                        Credit = data.Credit,
+                        IdReport = data.IdReport,
+                        Debt = data.Debt,
+                        Monthly = data.Monthly,
+                        Change = data.Change,
+                        CurrentDebt = data.CurrentDebt,
+                        DatePayment = data.DatePayment,
+                        LastPayment = data.LastPayment,
+                        Ticket = data.Ticket,
+                        Deadline = data.Deadline,
+                    };
+                 }
+            }
+            return dataClients;
         }
 
     }

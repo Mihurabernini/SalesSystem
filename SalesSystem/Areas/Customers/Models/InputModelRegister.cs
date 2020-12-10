@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SalesSystem.Areas.Customers.Models
 {
-    public class InputModelRegister
+    public class InputModelRegister : TReports_clients
     {
         [Required(ErrorMessage = "El campo dni es obligatorio.")]
         public string Nid { get; set; }
